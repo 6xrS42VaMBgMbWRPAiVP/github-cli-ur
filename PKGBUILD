@@ -5,7 +5,7 @@
 
 pkgname=github-cli
 pkgver=2.48.0
-pkgrel=1
+pkgrel=2
 pkgdesc="The GitHub CLI"
 arch=("x86_64")
 url="https://github.com/cli/cli"
@@ -34,13 +34,12 @@ build() {
     export CGO_CFLAGS="${CFLAGS}"
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
-    export CGO_ENABLED=0
-    export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+    export GOFLAGS='-buildmode=pie -trimpath -mod=readonly -modcacherw'
 
     make GH_VERSION="v$pkgver" bin/gh manpages
-    bin/gh completion -s bash | install -Dm644 /dev/stdin share/bash-completion/completions/gh
-    bin/gh completion -s zsh | install -Dm644 /dev/stdin share/zsh/site-functions/_gh
-    bin/gh completion -s fish | install -Dm644 /dev/stdin share/fish/vendor_completions.d/gh.fish
+    bin/gh completion -s bash | install -Dm0644 /dev/stdin share/bash-completion/completions/gh
+    bin/gh completion -s zsh  | install -Dm0644 /dev/stdin share/zsh/site-functions/_gh
+    bin/gh completion -s fish | install -Dm0644 /dev/stdin share/fish/vendor_completions.d/gh.fish
 }
 
 check(){
