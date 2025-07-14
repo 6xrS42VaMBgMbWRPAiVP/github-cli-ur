@@ -1,6 +1,6 @@
 pkgbase = github-cli
 	pkgdesc = The GitHub CLI
-	pkgver = 2.75.0
+	pkgver = 2.75.1
 	pkgrel = 1
 	url = https://github.com/cli/cli
 	arch = x86_64
@@ -12,7 +12,7 @@ pkgbase = github-cli
 	depends = mailcap
 	optdepends = git: To interact with repositories
 	optdepends = org.freedesktop.secrets: Store credentials in system keyring
-	source = github-cli-2.75.0.tar.gz::https://github.com/cli/cli/archive/v2.75.0.tar.gz
-	sha256sums = a99fce70ccb8e0a311a504eda0cfd24e23431e158bf136d81ac7ad25f0431597
+	source = github-cli-2.75.1.tar.gz::https://github.com/cli/cli/archive/v2.75.1.tar.gz
+	sha256sums = b25543af676ab86ed0715fd322f3644b92de68aff45f36463eca710ac81a85f4
 
 pkgname = github-cli
