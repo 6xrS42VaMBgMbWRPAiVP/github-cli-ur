@@ -4,7 +4,7 @@
 # Contributor: Richard Bradfield <bradfier@fstab.me>
 
 pkgname=github-cli
-pkgver=2.87.1
+pkgver=2.87.2
 pkgrel=1
 pkgdesc="The GitHub CLI"
 arch=("x86_64")
@@ -16,7 +16,7 @@ checkdepends=("openssh")
 optdepends=("git: To interact with repositories"
             "org.freedesktop.secrets: Store credentials in system keyring")
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('6dc42ec74adacd22a5e5f2ece153c572df17c7b3142ab34fc22c407e271c5132')
+sha256sums=('b36313ba276842bcdc59d40d2f3497fe373fa19ec0d54bde72594134631cd538')
 
 prepare() {
     cd "cli-${pkgver}"
