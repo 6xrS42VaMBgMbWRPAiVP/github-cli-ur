@@ -5,7 +5,7 @@
 
 pkgname=github-cli
 pkgver=2.91.0
-pkgrel=1
+pkgrel=2
 pkgdesc="The GitHub CLI"
 arch=("x86_64")
 url="https://github.com/cli/cli"
@@ -35,6 +35,8 @@ build() {
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
     export GOFLAGS='-buildmode=pie -trimpath -mod=readonly -modcacherw'
+    # TODO: disable telemetry by default when possible, see https://github.com/cli/cli/issues/13260
+    export GO_BUILDTAGS='!updateable'
 
     make GH_VERSION="v$pkgver" bin/gh manpages
     bin/gh completion -s bash | install -Dm0644 /dev/stdin share/bash-completion/completions/gh
