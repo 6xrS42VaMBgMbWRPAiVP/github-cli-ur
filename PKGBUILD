@@ -5,7 +5,7 @@
 
 pkgname=github-cli
 pkgver=2.92.0
-pkgrel=1
+pkgrel=2
 pkgdesc="The GitHub CLI"
 arch=("x86_64")
 url="https://github.com/cli/cli"
@@ -15,6 +15,7 @@ makedepends=("go" "git")
 checkdepends=("openssh")
 optdepends=("git: To interact with repositories"
             "org.freedesktop.secrets: Store credentials in system keyring")
+options=(!lto)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         "$url/commit/cb2509cb612cf9111a12a7960afd10b0c9d2dede.patch")
 sha256sums=('ad18928ce4e2695d7fc1adefa0f5e0496e570a430016cee4c22d7bf87e5d9c1d'
