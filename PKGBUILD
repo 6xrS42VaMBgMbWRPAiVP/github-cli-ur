@@ -45,10 +45,17 @@
 _os="$(
   uname \
     -o)"
+_arch="$(
+  uname \
+    -o)"
+_go_pkg="go"
 if [[ "${_os}" == "Android" ]]; then
   _libc="ndk-sysroot"
   _compiler="clang"
   _libcompiler="llvm-libs"
+  if [[ "${_arch}" != "aarch64" ]] ;then
+    _go_pkg="golang"
+  fi
 elif [[ "${_os}" == "GNU/Linux" ]]; then
   _libc="glibc"
   _compiler="gcc"
@@ -100,10 +107,16 @@ depends=(
   "${_libc}"
   "mailcap"
 )
+
 makedepends=(
-  "go"
-  "git"
+  "${_go_pkg}"
 )
+_git="true"
+if [[ "${_git}" == "true" ]]; then
+  makedepends+=(
+    "git"
+  )
+fi
 provides=(
   "${_pkg_alt}=${pkgver}"
 )
@@ -113,9 +126,17 @@ conflicts=(
 checkdepends=(
   "openssh"
 )
+_git_optdepends=(
+  "git:"
+    "To interact with repositories."
+)
+_org_freedesktop_secrets_optdepends=(
+  "org.freedesktop.secrets:"
+    "Store credentials in system keyring."
+)
 optdepends=(
-  "git: To interact with repositories"
-  "org.freedesktop.secrets: Store credentials in system keyring"
+  "${_git_optdepends[*]}"
+  "${_org_freedesktop_secrets_optdepends[*]}"
 )
 options=(
   "!lto"
