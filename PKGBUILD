@@ -42,6 +42,7 @@
 #    <bradfier@fstab.me>
 
 _pkg=github-cli
+_pkg_alt=gh
 pkgbase="${_pkg}"
 pkgname=(
   "${_pkg}"
@@ -71,6 +72,12 @@ makedepends=(
   "go"
   "git"
 )
+provides=(
+  "${_pkg_alt}=${pkgver}"
+)
+conflicts=(
+  "${_pkg_alt}"
+)
 checkdepends=(
   "openssh"
 )
@@ -79,7 +86,7 @@ optdepends=(
   "org.freedesktop.secrets: Store credentials in system keyring"
 )
 options=(
-  !lto
+  "!lto"
 )
 _tarname="${_pkg}-${pkgver}"
 _tarfile="${_tarname}.tar.gz"
