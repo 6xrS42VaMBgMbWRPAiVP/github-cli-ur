@@ -41,6 +41,36 @@
 #  Richard Bradfield
 #    <bradfier@fstab.me>
 
+
+_os="$(
+  uname \
+    -o)"
+if [[ "${_os}" == "Android" ]]; then
+  _libc="ndk-sysroot"
+  _compiler="clang"
+  _libcompiler="llvm-libs"
+elif [[ "${_os}" == "GNU/Linux" ]]; then
+  _libc="glibc"
+  _compiler="gcc"
+  _libcompiler="libgcc"
+elif [[ "${_os}" == "Msys" ]]; then
+  _libc="msys2-w32api-runtime"
+  _libc_headers="msys2-w32api-headers"
+  _compiler="gcc"
+  _libcompiler="gcc-libs"
+  _sh="sh"
+else
+  _msg=(
+    "Unknown os '${_os}'."
+  )
+  msg \
+    "${_msg[*]}"
+  _libc="msys2-w32api-runtime"
+  _libc_headers="msys2-w32api-headers"
+  _compiler="gcc"
+  _libcompiler="gcc-libs"
+  _sh="sh"
+fi
 _pkg=github-cli
 _pkg_alt=gh
 pkgbase="${_pkg}"
@@ -48,7 +78,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=1
+pkgrel=3
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -63,9 +93,11 @@ arch=(
   "x86_64"
 )
 url="https://github.com/cli/cli"
-license=("MIT")
+license=(
+  "MIT"
+)
 depends=(
-  "glibc"
+  "${_libc}"
   "mailcap"
 )
 makedepends=(
