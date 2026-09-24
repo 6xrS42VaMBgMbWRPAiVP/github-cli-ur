@@ -85,7 +85,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=13
+pkgrel=14
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
