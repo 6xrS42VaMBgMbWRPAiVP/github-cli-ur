@@ -85,7 +85,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=10
+pkgrel=12
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -188,22 +188,53 @@ prepare() {
 
 build() {
   local \
-    _make_opts=()
+    _arch \
+    _goflags=() \
+    _go_build_tags=() \
+    _make_opts=() \
+    _target
+  _arch="$(
+    uname \
+      -m)"
   _make_opts+=(
     GH_VERSION="v${pkgver}"
   )
+  _go_flags+=(
+    -trimpath
+    -mod=readonly
+    -modcacherw
+  )
+  if [[ "${_arch}" == "aarch64" || \
+        "${_arch}" == "x86_64"  ]]; then
+    _go_flags+=(
+      -buildmode=pie
+    )
+  fi
+  _go_build_tags+=(
+    noupdateable
+    notelemetry
+  )
+  _target="bin/gh"
   cd \
     "cli-$pkgver"
+  if [[ "${_os}" == "Msys" ]]; then
+    export \
+      GOOS="windows"
+    _target="${_target}.exe"
+  fi
   export \
     CGO_CPPFLAGS="${CPPFLAGS}" \
     CGO_CFLAGS="${CFLAGS}" \
     CGO_CXXFLAGS="${CXXFLAGS}" \
     CGO_LDFLAGS="${LDFLAGS}" \
-    GOFLAGS='-buildmode=pie -trimpath -mod=readonly -modcacherw' \
-    GO_BUILDTAGS='noupdateable,notelemetry'
+    GOFLAGS="${_go_flags[*]}" \
+    GO_BUILDTAGS="$(
+      IFS=","; \
+      echo \
+        "${_go_build_tags[*]}")"
   make \
     "${_make_opts[@]}" \
-    bin/gh \
+    "${_target}" \
     manpages
   "./bin/gh" \
     completion \
