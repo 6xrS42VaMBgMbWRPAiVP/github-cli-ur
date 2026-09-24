@@ -85,7 +85,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=8
+pkgrel=10
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -143,13 +143,26 @@ options=(
 )
 _tarname="${_pkg}-${pkgver}"
 _tarfile="${_tarname}.tar.gz"
+_url="${url}"
+_uri="${_url}/archive/v${pkgver}.tar.gz"
+_src="${_tarfile}::${_uri}"
+_sum='a266fe8575c0e061b987920c1831a15f71bf0036a8729a5ebb93c2fb0164899c'
+_patchname="telemetry-disable"
+_patchfile="${_patchname}.patch"
+_patch_commit="cb2509cb612cf9111a12a7960afd10b0c9d2dede"
+_patch_uri="${url}/commit/${_patch_commit}.patch"
+_patch_sum="f5c78941435a2cd7581b3ccc7f7c1f6db17e2e910bb6b87d1693ccb19ec0e7aa"
+_patch_src="${_patchfile}"
+if [[ ! -e "${_patchfile}" ]]; then
+  _patch_src+="::${_patch_uri}"
+fi
 source=(
-  "${_tarfile}::${url}/archive/v${pkgver}.tar.gz"
-  "${url}/commit/cb2509cb612cf9111a12a7960afd10b0c9d2dede.patch"
+  "${_src}"
+  "${_patch_src}"
 )
 sha256sums=(
-  'a266fe8575c0e061b987920c1831a15f71bf0036a8729a5ebb93c2fb0164899c'
-  'f5c78941435a2cd7581b3ccc7f7c1f6db17e2e910bb6b87d1693ccb19ec0e7aa'
+  "${_sum}"
+  "${_patch_sum}"
 )
 
 prepare() {
@@ -170,7 +183,7 @@ prepare() {
   patch \
     -p1 \
     -i \
-    "../cb2509cb612cf9111a12a7960afd10b0c9d2dede.patch"
+    "${srcdir}/telemetry-disable.patch"
 }
 
 build() {
