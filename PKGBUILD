@@ -85,7 +85,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=19
+pkgrel=20
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -279,7 +279,8 @@ package() {
     _usr
   _usr="/usr"
   if [[ "${_os}" == "Msys" ]]; then
-    _usr="${MINGW_PREFIX}"
+    # _usr="${MINGW_PREFIX}"
+    _usr="/mingw64"
   fi
   _make_opts+=(
     DESTDIR="${pkgdir}"
