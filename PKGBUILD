@@ -88,8 +88,14 @@ pkgbase="${_pkg}"
 pkgname=(
   "${_pkg}"
 )
+if [[ ! -v "_mingw64" ]]; then
+  _mingw64="true"
+fi
+if [[ "${_mingw64}" == "true" ]]; then
+  mingw_arch=('ucrt64' 'clang64' 'clangarm64')
+fi
 pkgver=2.101.0
-pkgrel=24
+pkgrel=25
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
