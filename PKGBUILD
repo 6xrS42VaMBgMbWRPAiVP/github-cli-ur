@@ -89,7 +89,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=22
+pkgrel=24
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -208,10 +208,12 @@ prepare() {
 build() {
   local \
     _arch \
+    _gh_bin \
     _goflags=() \
     _go_build_tags=() \
     _make_opts=() \
     _target
+  _gh_bin="${_pkg_alt}"
   _arch="$(
     uname \
       -m)"
@@ -233,13 +235,14 @@ build() {
     noupdateable
     notelemetry
   )
-  _target="bin/gh"
+  _target="bin/${_pkg_alt}"
   cd \
     "${_Pkg}-${pkgver}"
   if [[ "${_os}" == "Msys" ]]; then
     export \
       GOOS="windows"
     _target="${_target}.exe"
+    _gh_cmd="${_gh}.exe"
   fi
   export \
     CGO_CPPFLAGS="${CPPFLAGS}" \
@@ -255,23 +258,23 @@ build() {
     "${_make_opts[@]}" \
     "${_target}" \
     manpages
-  "./bin/gh" \
+  "./bin/${_gh_bin}" \
     completion \
     -s \
       "bash" |
     install \
       -vDm0644 \
       "/dev/stdin" \
-      "share/bash-completion/completions/gh"
-  "./bin/gh" \
+      "share/bash-completion/completions/${_pkg_alt}"
+  "./bin/${_gh_bin}" \
     completion \
     -s \
       "zsh" |
     install \
       -vDm0644 \
       "/dev/stdin" \
-      "share/zsh/site-functions/_gh"
-  "./bin/gh" \
+      "share/zsh/site-functions/_${_pkg_alt}"
+  "./bin/${_gh_bin}" \
     completion \
     -s \
       "fish" |
@@ -309,15 +312,20 @@ package() {
       "${_make_opts[@]}" \
       install
   elif [[ "${_docs}" == "false" ]]; then
-    cp \
-      -r \
-      "share/" \
-      "${pkgdir}${_usr}"
     install \
       -vDm755 \
-      "bin/gh.exe" \
-      "${pkgdir}${_usr}/bin/gh.exe"
+      "bin/${_pkg_alt}" \
+      "${pkgdir}${_usr}/bin/${_pkg_alt}"
+    install \
+      -vDm755 \
+      "bin/${_pkg_alt}.exe" \
+      "${pkgdir}${_usr}/bin/${_pkg_alt}.exe"
   fi
+  cp \
+    -r \
+    "share/" \
+    "${pkgdir}${_usr}"
+
   install \
     -vDm644 \
     "LICENSE" \
