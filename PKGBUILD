@@ -85,7 +85,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=16
+pkgrel=17
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -273,28 +273,50 @@ check(){
   true
 }
 
+_root_get() {
+  local \
+    _bin
+  _bin="$(
+    dirname \
+      "$(command \
+           -v \
+           "env")")"
+  dirname "$(
+    dirname \
+      "${_bin}")"
+}
+
 package() {
   local \
-    _make_opts=()
+    _make_opts=() \
+    _pkgdir \
+    _root
+  _root="$(
+    _root_get)"
+  if [[ "${_os}" == "Msys" ]]; then
+    _pkgdir="${pkgdir}${_root}"
+  else
+    _pkgdir="${pkgdir}"
+  fi
   _make_opts+=(
-    DESTDIR="${pkgdir}"
+    DESTDIR="${_pkgdir}"
     prefix="/usr"
   )
   cd \
-    "cli-$pkgver"
+    "cli-${pkgver}"
   make \
     "${_make_opts[@]}" \
     install
   cp \
     -r \
     "share/" \
-    "${pkgdir}/usr"
+    "${_pkgdir}/usr"
   install \
     -vDm644 \
     "LICENSE" \
-    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    "${_pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   install \
     -vDm644 \
     "README.md" \
-    "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+    "${_pkgdir}/usr/share/doc/${pkgname}/README.md"
 }
