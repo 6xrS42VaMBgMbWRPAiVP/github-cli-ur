@@ -95,7 +95,7 @@ if [[ "${_mingw64}" == "true" ]]; then
   mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 fi
 pkgver=2.101.0
-pkgrel=25
+pkgrel=26
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"

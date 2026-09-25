@@ -2653,7 +2653,7 @@ jobs:
         id:
           version
       - name:
-          Upload Windows package.
+          Uploads Windows package.
         uses:
           actions/upload-release-asset@v1
         env:
