@@ -56,16 +56,19 @@ if [[ "${_os}" == "Android" ]]; then
   if [[ "${_arch}" != "aarch64" ]] ;then
     _go_pkg="golang"
   fi
+  _mailcap="mailcap"
 elif [[ "${_os}" == "GNU/Linux" ]]; then
   _libc="glibc"
   _compiler="gcc"
   _libcompiler="libgcc"
+  _mailcap="mailcap"
 elif [[ "${_os}" == "Msys" ]]; then
   _libc="msys2-w32api-runtime"
   _libc_headers="msys2-w32api-headers"
   _compiler="gcc"
   _libcompiler="gcc-libs"
   _sh="sh"
+  _mailcap="winpty"
 else
   _msg=(
     "Unknown os '${_os}'."
@@ -78,14 +81,15 @@ else
   _libcompiler="gcc-libs"
   _sh="sh"
 fi
-_pkg=github-cli
+_Pkg=cli
+_pkg=github-${_Pkg}
 _pkg_alt=gh
 pkgbase="${_pkg}"
 pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=21
+pkgrel=22
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -99,18 +103,14 @@ arch=(
   "powerpc"
   "x86_64"
 )
-url="https://github.com/cli/cli"
+url="https://github.com/${_Pkg}/${_Pkg}"
 license=(
   "MIT"
 )
 depends=(
   "${_libc}"
+  "${_mailcap}"
 )
-if [[ "${_os}" != "Msys" ]]; then
-  depends+=(
-    "mailcap"
-  )
-fi
 makedepends=(
   "${_go_pkg}"
 )
@@ -155,6 +155,11 @@ optdepends=(
 options=(
   "!lto"
 )
+if [[ "${_os}" == "Msys" ]]; then
+  options+=(
+    "!strip"
+  )
+fi
 _tarname="${_pkg}-${pkgver}"
 _tarfile="${_tarname}.tar.gz"
 _url="${url}"
@@ -181,7 +186,7 @@ sha256sums=(
 
 prepare() {
   cd \
-    "cli-${pkgver}"
+    "${_Pkg}-${pkgver}"
   # TODO:
   #   These tests invoke the TTY and
   #   our container *really* does not like that
@@ -230,7 +235,7 @@ build() {
   )
   _target="bin/gh"
   cd \
-    "cli-$pkgver"
+    "${_Pkg}-${pkgver}"
   if [[ "${_os}" == "Msys" ]]; then
     export \
       GOOS="windows"
@@ -278,7 +283,7 @@ build() {
 
 check(){
   cd \
-    "cli-$pkgver"
+    "${_Pkg}-${pkgver}"
   make \
     test || \
   true
@@ -290,22 +295,29 @@ package() {
     _usr
   _usr="/usr"
   if [[ "${_os}" == "Msys" ]]; then
-    # _usr="${MINGW_PREFIX}"
-    _usr="/mingw64"
+    # _usr="/mingw64"
+    _usr="${MINGW_PREFIX}"
   fi
   _make_opts+=(
     DESTDIR="${pkgdir}"
     prefix="${_usr}"
   )
   cd \
-    "cli-${pkgver}"
-  make \
-    "${_make_opts[@]}" \
-    install
-  cp \
-    -r \
-    "share/" \
-    "${pkgdir}${_usr}"
+    "${_Pkg}-${pkgver}"
+  if [[ "${_docs}" == "true" ]]; then
+    make \
+      "${_make_opts[@]}" \
+      install
+  elif [[ "${_docs}" == "false" ]]; then
+    cp \
+      -r \
+      "share/" \
+      "${pkgdir}${_usr}"
+    install \
+      -vDm755 \
+      "bin/gh.exe" \
+      "${pkgdir}${_usr}/bin/gh.exe"
+  fi
   install \
     -vDm644 \
     "LICENSE" \
