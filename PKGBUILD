@@ -297,9 +297,9 @@ package() {
   install \
     -vDm644 \
     "LICENSE" \
-    "${_pkgdir}${_usr}/share/licenses/${pkgname}/LICENSE"
+    "${pkgdir}${_usr}/share/licenses/${pkgname}/LICENSE"
   install \
     -vDm644 \
     "README.md" \
-    "${_pkgdir}${_usr}/share/doc/${pkgname}/README.md"
+    "${pkgdir}${_usr}/share/doc/${pkgname}/README.md"
 }
