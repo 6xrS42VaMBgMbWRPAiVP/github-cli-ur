@@ -85,7 +85,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=20
+pkgrel=21
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -126,6 +126,17 @@ provides=(
 conflicts=(
   "${_pkg_alt}"
 )
+if [[ "${_os}" == "Msys" ]]; then
+  provides+=(
+    "${MINGW_PACKAGE_PREFIX}-${_pkg}=${pkgver}"
+    "${MINGW_PACKAGE_PREFIX}-${_pkg_alt}=${pkgver}"
+  )
+  conflicts+=(
+    "${MINGW_PACKAGE_PREFIX}-${_pkg}=${pkgver}"
+    "${MINGW_PACKAGE_PREFIX}-${_pkg_alt}=${pkgver}"
+  )
+fi
+
 checkdepends=(
   "openssh"
 )
