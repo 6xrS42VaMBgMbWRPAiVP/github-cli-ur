@@ -85,7 +85,7 @@ pkgname=(
   "${_pkg}"
 )
 pkgver=2.101.0
-pkgrel=14
+pkgrel=15
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -105,9 +105,12 @@ license=(
 )
 depends=(
   "${_libc}"
-  "mailcap"
 )
-
+if [[ "${_os}" == "Msys" ]]; then
+  depends+=(
+    "mailcap"
+  )
+fi
 makedepends=(
   "${_go_pkg}"
 )
