@@ -95,7 +95,7 @@ if [[ "${_mingw64}" == "true" ]]; then
   mingw_arch=('ucrt64' 'clang64' 'clangarm64')
 fi
 pkgver=2.101.0
-pkgrel=26
+pkgrel=27
 pkgdesc="The GitHub CLI"
 arch=(
   "aarch64"
@@ -303,21 +303,20 @@ package() {
     _make_opts=() \
     _usr
   _usr="/usr"
-  if [[ "${_os}" == "Msys" ]]; then
-    # _usr="/mingw64"
-    _usr="${MINGW_PREFIX}"
-  fi
+  # if [[ "${_os}" == "Msys" ]]; then
+  #   # _usr="/mingw64"
+  #   _usr="${MINGW_PREFIX}"
+  # fi
   _make_opts+=(
     DESTDIR="${pkgdir}"
     prefix="${_usr}"
   )
   cd \
     "${_Pkg}-${pkgver}"
-  if [[ "${_docs}" == "true" ]]; then
-    make \
-      "${_make_opts[@]}" \
-      install
-  elif [[ "${_docs}" == "false" ]]; then
+  make \
+    "${_make_opts[@]}" \
+    install
+  if [[ "${_os}" == "Msys" ]]; then
     install \
       -vDm755 \
       "bin/${_pkg_alt}" \
@@ -331,7 +330,6 @@ package() {
     -r \
     "share/" \
     "${pkgdir}${_usr}"
-
   install \
     -vDm644 \
     "LICENSE" \
